@@ -26,10 +26,23 @@ def __init_plugin__(app=None):
     addmenuitemqt('Demo "Render" Plugin', run_plugin_gui)
 
 
+# global reference to avoid garbage collection of our dialog
+dialog = None
+
+
 def run_plugin_gui():
     '''
     Open our custom dialog
     '''
+    global dialog
+
+    if dialog is None:
+        dialog = make_dialog()
+
+    dialog.show()
+
+
+def make_dialog():
     # entry point to PyMOL's API
     from pymol import cmd
 
@@ -84,5 +97,4 @@ def run_plugin_gui():
     form.button_browse.clicked.connect(browse_filename)
     form.button_close.clicked.connect(dialog.close)
 
-    # show the dialog
-    dialog.show()
+    return dialog
